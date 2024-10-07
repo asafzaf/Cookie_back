@@ -1,0 +1,94 @@
+{
+    "items": [
+        {
+            "name": {
+                "en": "Apple",
+                "heb": "תפוח"
+            }
+        },
+        {
+            "name": {
+                "en": "Banana",
+                "heb": "בננה"
+            }
+        },
+        {
+            "name": {
+                "en": "Pineapple",
+                "heb": "אננס"
+            }
+        },
+        {
+            "name": {
+                "en": "Grapes",
+                "heb": "ענבים"
+            }
+        },
+        {
+            "name": {
+                "en": "Orange",
+                "heb": "תפוז"
+            }
+        },
+        {
+            "name": {
+                "en": "Strawberry",
+                "heb": "תות שדה"
+            }
+        },
+        {
+            "name": {
+                "en": "Watermelon",
+                "heb": "אבטיח"
+            }
+        },
+        {
+            "name": {
+                "en": "Peach",
+                "heb": "אפרסק"
+            }
+        },
+        {
+            "name": {
+                "en": "Pear",
+                "heb": "אגס"
+            }
+        },
+        {
+            "name": {
+                "en": "Plum",
+                "heb": "שזיף"
+            }
+        },
+        {
+            "name": {
+                "en": "Mango",
+                "heb": "מנגו"
+            }
+        },
+        {
+            "name": {
+                "en": "Kiwi",
+                "heb": "קיווי"
+            }
+        },
+        {
+            "name": {
+                "en": "Cherry",
+                "heb": "דובדבן"
+            }
+        },
+        {
+            "name": {
+                "en": "Lemon",
+                "heb": "לימון"
+            }
+        },
+        {
+            "name": {
+                "en": "Pomegranate",
+                "heb": "רימון"
+            }
+        }
+    ]
+}
