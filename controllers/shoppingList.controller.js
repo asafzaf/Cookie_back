@@ -34,8 +34,8 @@ exports.getShoppingList = catchAsync(async (req, res, next) => {
 });
 
 exports.createShoppingList = catchAsync(async (req, res, next) => {
-  const new_list = await shoppingListRepository.create(req.body);
-  const { userId } = req.body;
+  const { userId, name } = req.body;
+  const new_list = await shoppingListRepository.create({ name });
   new_list.admins.push(userId);
   await new_list.save();
   const { id } = new_list;
@@ -83,7 +83,6 @@ exports.addItemToShoppingList = catchAsync(async (req, res, next) => {
   if (!shoppingList) {
     return next(new NotFoundError(`Shopping list with id ${id} not found`));
   }
-  console.log(shoppingList.items);
   const itemIndex = shoppingList.items.findIndex(
     (m_item) => m_item.item.toString() === item.toString()
   );
@@ -95,7 +94,23 @@ exports.addItemToShoppingList = catchAsync(async (req, res, next) => {
     shoppingList.items.push({ item, quantity: 1 });
   }
   await shoppingList.save();
-  res.status(200).json(shoppingList);
+
+  const newData = await shoppingListRepository
+    .retrieve({
+      _id: id,
+    })
+    .populate({
+      path: "items.item",
+      model: "item",
+    })
+    .lean();
+
+  const resItem = newData.items.find(
+    (m_item) => m_item.item._id.toString() === item.toString()
+  );
+  console.log(resItem);
+
+  res.status(200).json(resItem);
 });
 
 exports.removeItemFromShoppingList = catchAsync(async (req, res, next) => {
@@ -116,6 +131,25 @@ exports.removeItemFromShoppingList = catchAsync(async (req, res, next) => {
       shoppingList.items.splice(itemIndex, 1);
     }
   }
+
   await shoppingList.save();
-  res.status(200).json(shoppingList);
+
+  const newData = await shoppingListRepository
+    .retrieve({
+      _id: id,
+    })
+    .populate({
+      path: "items.item",
+      model: "item",
+    })
+    .lean();
+
+  let resItem = newData.items.find(
+    (m_item) => m_item.item._id.toString() === item.toString()
+  );
+  if (!resItem) {
+    resItem = null;
+  }
+  res.status(200).json(resItem);
+
 });
