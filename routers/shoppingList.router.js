@@ -10,5 +10,6 @@ router.post('/:id/add', shoppingListController.addItemToShoppingList);
 router.post('/:id/remove', shoppingListController.removeItemFromShoppingList);
 router.put('/:id', shoppingListController.updateShoppingList);
 router.delete('/:id', shoppingListController.deleteShoppingList);
+router.post('/setDefault', shoppingListController.setDefaultShoppingList);
 
 module.exports = router;

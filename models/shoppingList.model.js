@@ -29,6 +29,18 @@ const shoppingListSchema = new Schema({
       },
     },
   ],
+  unrecognizedItems: [
+    {
+      item: {
+        type: String,
+        required: true,
+      },
+      quantity: {
+        type: Number,
+        default: 1,
+      },
+    },
+  ],
   dateCreated: {
     type: Date,
     default: Date.now,

@@ -151,5 +151,19 @@ exports.removeItemFromShoppingList = catchAsync(async (req, res, next) => {
     resItem = null;
   }
   res.status(200).json(resItem);
+});
 
+exports.setDefaultShoppingList = catchAsync(async (req, res, next) => {
+  const { userId, listId } = req.body;
+  const user = await userRepository.retrieve({ _id: userId });
+  if (!user) {
+    return next(new NotFoundError(`User with id ${userId} not found`));
+  }
+  const list = await shoppingListRepository.retrieve({ _id: listId });
+  if (!list) {
+    return next(new NotFoundError(`Shopping list with id ${listId} not found`));
+  }
+  user.default_shopping_list = listId;
+  await user.save();
+  res.status(200).json(user);
 });
