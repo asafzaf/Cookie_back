@@ -32,8 +32,8 @@ const shoppingListSchema = new Schema({
   unrecognizedItems: [
     {
       item: {
-        type: String,
-        required: true,
+        type: Schema.Types.ObjectId,
+        ref: "unrecognized.item",
       },
       quantity: {
         type: Number,

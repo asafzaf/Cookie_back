@@ -26,6 +26,10 @@ exports.getShoppingList = catchAsync(async (req, res, next) => {
       path: "items.item",
       model: "item",
     })
+    .populate({
+      path: "unrecognizedItems.item",
+      model: "unrecognized.item",
+    })
     .lean();
   if (!shoppingList) {
     return next(new NotFoundError(`Shopping list with id ${id} not found`));
@@ -113,6 +117,49 @@ exports.addItemToShoppingList = catchAsync(async (req, res, next) => {
   res.status(200).json(resItem);
 });
 
+exports.addUnrecognizedItemToShoppingList = catchAsync(
+  async (req, res, next) => {
+    const { id } = req.params;
+    const item = req.body.item;
+    console.log("item", item);
+    const shoppingList = await shoppingListRepository.retrieve({
+      _id: id,
+    });
+    console.log("shopping list", shoppingList);
+    if (!shoppingList) {
+      return next(new NotFoundError(`Shopping list with id ${id} not found`));
+    }
+    const itemIndex = shoppingList.unrecognizedItems.findIndex(
+      (m_item) => m_item.item.toString() === item.toString()
+    );
+    if (itemIndex !== -1) {
+      console.log("found");
+      shoppingList.unrecognizedItems[itemIndex].quantity += 1;
+    } else {
+      console.log("not found");
+      shoppingList.unrecognizedItems.push({ item, quantity: 1 });
+    }
+    await shoppingList.save();
+
+    const newData = await shoppingListRepository
+      .retrieve({
+        _id: id,
+      })
+      .populate({
+        path: "unrecognizedItems.item",
+        model: "unrecognized.item",
+      })
+      .lean();
+
+    console.log("item0:",newData.unrecognizedItems[0]);
+    const resItem = newData.unrecognizedItems.find(
+      (m_item) => m_item.item._id.toString() === item.toString()
+    );
+    console.log("resITem",resItem);
+    res.status(200).json(resItem);
+  }
+);
+
 exports.removeItemFromShoppingList = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const item = req.body.item;
@@ -152,6 +199,47 @@ exports.removeItemFromShoppingList = catchAsync(async (req, res, next) => {
   }
   res.status(200).json(resItem);
 });
+
+exports.removeUnrecognizedItemFromShoppingList = catchAsync(
+  async (req, res, next) => {
+    const { id } = req.params;
+    const item = req.body.item;
+    const shoppingList = await shoppingListRepository.retrieve({
+      _id: id,
+    });
+    if (!shoppingList) {
+      return next(new NotFoundError(`Shopping list with id ${id} not found`));
+    }
+    const itemIndex = shoppingList.unrecognizedItems.findIndex(
+      (m_item) => m_item.item.toString() === item.toString()
+    );
+    if (itemIndex !== -1) {
+      shoppingList.unrecognizedItems[itemIndex].quantity -= 1;
+      if (shoppingList.unrecognizedItems[itemIndex].quantity === 0) {
+        shoppingList.unrecognizedItems.splice(itemIndex, 1);
+      }
+    }
+
+    await shoppingList.save();
+
+    const newData = await shoppingListRepository
+      .retrieve({
+        _id: id,
+      })
+      .populate({
+        path: "unrecognizedItems.item",
+        model: "unrecognized.item",
+      });
+    let resItem = newData.unrecognizedItems.find(
+      (m_item) => m_item.item._id.toString() === item.toString()
+    );
+    if (!resItem) {
+      resItem = null;
+    }
+    console.log("resItem", resItem);
+    res.status(200).json(resItem);
+  }
+);
 
 exports.setDefaultShoppingList = catchAsync(async (req, res, next) => {
   const { userId, listId } = req.body;
