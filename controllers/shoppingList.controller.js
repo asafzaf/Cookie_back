@@ -30,6 +30,14 @@ exports.getShoppingList = catchAsync(async (req, res, next) => {
       path: "unrecognizedItems.item",
       model: "unrecognized.item",
     })
+    .populate({
+      path: "users",
+      model: "user",
+    })
+    .populate({
+      path: "admins",
+      model: "user",
+    })
     .lean();
   if (!shoppingList) {
     return next(new NotFoundError(`Shopping list with id ${id} not found`));
@@ -41,6 +49,7 @@ exports.createShoppingList = catchAsync(async (req, res, next) => {
   const { userId, name } = req.body;
   const new_list = await shoppingListRepository.create({ name });
   new_list.admins.push(userId);
+  new_list.users.push(userId);
   await new_list.save();
   const { id } = new_list;
   const user = await userRepository.retrieve({ _id: userId });
@@ -151,11 +160,11 @@ exports.addUnrecognizedItemToShoppingList = catchAsync(
       })
       .lean();
 
-    console.log("item0:",newData.unrecognizedItems[0]);
+    console.log("item0:", newData.unrecognizedItems[0]);
     const resItem = newData.unrecognizedItems.find(
       (m_item) => m_item.item._id.toString() === item.toString()
     );
-    console.log("resITem",resItem);
+    console.log("resITem", resItem);
     res.status(200).json(resItem);
   }
 );
@@ -254,4 +263,81 @@ exports.setDefaultShoppingList = catchAsync(async (req, res, next) => {
   user.default_shopping_list = listId;
   await user.save();
   res.status(200).json(user);
+});
+
+exports.addUserToShoppingList = catchAsync(async (req, res, next) => {
+  const { userEmail, listId } = req.body;
+  const user = await userRepository.retrieve({ email: userEmail });
+  if (!user) {
+    return next(new NotFoundError(`User with email ${userEmail} not found`));
+  }
+  const list = await shoppingListRepository.retrieve({ _id: listId });
+  if (!list) {
+    return next(new NotFoundError(`Shopping list with id ${listId} not found`));
+  }
+  list.users.push(user._id);
+  await list.save();
+  user.shoppingLists.push(listId);
+  await user.save();
+  res.status(200).json(list);
+});
+
+exports.removeUserFromShoppingList = catchAsync(async (req, res, next) => {
+  const { userId, listId } = req.body;
+  const user = await userRepository.retrieve({ _id: userId });
+  if (!user) {
+    return next(new NotFoundError(`User with id ${userId} not found`));
+  }
+  const list = await shoppingListRepository.retrieve({ _id: listId });
+  if (!list) {
+    return next(new NotFoundError(`Shopping list with id ${listId} not found`));
+  }
+  const userIndex = list.users.indexOf(userId);
+  if (userIndex !== -1) {
+    list.users.splice(userIndex, 1);
+  }
+  const adminIndex = list.admins.indexOf(userId);
+  if (adminIndex !== -1) {
+    list.admins.splice(adminIndex, 1);
+  }
+  await list.save();
+  const listIndex = user.shoppingLists.indexOf(listId);
+  if (listIndex !== -1) {
+    user.shoppingLists.splice(listIndex, 1);
+  }
+  await user.save();
+  res.status(200).json(list);
+});
+
+exports.addAdminToShoppingList = catchAsync(async (req, res, next) => {
+  const { userId, listId } = req.body;
+  const user = await userRepository.retrieve({ _id: userId });
+  if (!user) {
+    return next(new NotFoundError(`User with id ${userId} not found`));
+  }
+  const list = await shoppingListRepository.retrieve({ _id: listId });
+  if (!list) {
+    return next(new NotFoundError(`Shopping list with id ${listId} not found`));
+  }
+  list.admins.push(userId);
+  await list.save();
+  res.status(200).json(list);
+});
+
+exports.removeAdminFromShoppingList = catchAsync(async (req, res, next) => {
+  const { userId, listId } = req.body;
+  const user = await userRepository.retrieve({ _id: userId });
+  if (!user) {
+    return next(new NotFoundError(`User with id ${userId} not found`));
+  }
+  const list = await shoppingListRepository.retrieve({ _id: listId });
+  if (!list) {
+    return next(new NotFoundError(`Shopping list with id ${listId} not found`));
+  }
+  const userIndex = list.admins.indexOf(userId);
+  if (userIndex !== -1) {
+    list.admins.splice(userIndex, 1);
+  }
+  await list.save();
+  res.status(200).json(list);
 });
