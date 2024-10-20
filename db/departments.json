@@ -1,0 +1,154 @@
+{
+    "departments":[
+        {
+            "name": {
+                "en": "Fruits",
+                "heb": "פירות"
+            }
+        },
+        {
+            "name": {
+                "en": "Vegetables",
+                "heb": "ירקות"
+            }
+        },
+        {
+            "name": {
+                "en": "Dairy",
+                "heb": "מוצרי חלב"
+            }
+        },
+        {
+            "name": {
+                "en": "Meat",
+                "heb": "בשר"
+            }
+        },
+        {
+            "name": {
+                "en": "Fish",
+                "heb": "דגים"
+            }
+        },
+        {
+            "name": {
+                "en": "Bakery",
+                "heb": "מאפים"
+            }
+        },
+        {
+            "name": {
+                "en": "Frozen",
+                "heb": "קפואים"
+            }
+        },
+        {
+            "name": {
+                "en": "Spices",
+                "heb": "תבלינים"
+            }
+        },
+        {
+            "name": {
+                "en": "Drinks",
+                "heb": "משקאות"
+            }
+        },
+        {
+            "name": {
+                "en": "Canned",
+                "heb": "שימורים"
+            }
+        },
+        {
+            "name": {
+                "en": "Sweets",
+                "heb": "ממתקים"
+            }
+        },
+        {
+            "name": {
+                "en": "Snacks",
+                "heb": "נשנושים"
+            }
+        },
+        {
+            "name": {
+                "en": "Cleaning",
+                "heb": "ניקוי"
+            }
+        },
+        {
+            "name": {
+                "en": "Personal Care",
+                "heb": "טיפוח אישי"
+            }
+        },
+        {
+            "name": {
+                "en": "Baby",
+                "heb": "תינוק"
+            }
+        },
+        {
+            "name": {
+                "en": "Pets",
+                "heb": "חיות מחמד"
+            }
+        },
+        {
+            "name": {
+                "en": "Home",
+                "heb": "לבית"
+            }
+        },
+        {
+            "name": {
+                "en": "Electronics",
+                "heb": "אלקטרוניקה"
+            }
+        },
+        {
+            "name": {
+                "en": "Stationery",
+                "heb": "ציוד משרדי"
+            }
+        },
+        {
+            "name": {
+                "en": "Clothing",
+                "heb": "ביגוד"
+            }
+        },
+        {
+            "name": {
+                "en": "Farmacy",
+                "heb": "בית מרקחת"
+            }
+        },
+        {
+            "name": {
+                "en": "Supplements",
+                "heb": "תוספי תזונה"
+            }
+        },
+        {
+            "name": {
+                "en": "Meat substitutes",
+                "heb": "תחליפי בשר"
+            }
+        },
+        {
+            "name": {
+                "en": "Garden",
+                "heb": "גינה"
+            }
+        },
+        {
+            "name": {
+                "en": "Tools",
+                "heb": "כלים"
+            }
+        }
+    ]
+}
