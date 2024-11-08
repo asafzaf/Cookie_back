@@ -140,6 +140,30 @@
         },
         {
             "name": {
+                "en": "Gluten free",
+                "heb": "ללא גלוטן"
+            }
+        },
+        {
+            "name": {
+                "en": "Vegan",
+                "heb": "טבעוני"
+            }
+        },
+        {
+            "name": {
+                "en": "Organic",
+                "heb": "אורגני"
+            }
+        },
+        {
+            "name": {
+                "en": "Kosher",
+                "heb": "כשר"
+            }
+        },
+        {
+            "name": {
                 "en": "Garden",
                 "heb": "גינה"
             }
