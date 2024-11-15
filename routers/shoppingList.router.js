@@ -5,6 +5,7 @@ const router = express.Router();
 
 router.get("/", shoppingListController.getAllShoppingLists);
 router.get("/:id", shoppingListController.getShoppingList);
+router.get("/:id/ordered", shoppingListController.getOrderedShoppingList);
 router.post("/", shoppingListController.createShoppingList);
 router.post("/:id/add", shoppingListController.addItemToShoppingList);
 router.post(
@@ -17,6 +18,7 @@ router.post(
   shoppingListController.removeUnrecognizedItemFromShoppingList
 );
 router.put("/:id", shoppingListController.updateShoppingList);
+router.put("/:id/live", shoppingListController.updateLiveShoppingList);
 router.delete("/:id", shoppingListController.deleteShoppingList);
 router.post("/setDefault", shoppingListController.setDefaultShoppingList);
 router.post("/addUser", shoppingListController.addUserToShoppingList);

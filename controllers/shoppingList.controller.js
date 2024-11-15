@@ -1,9 +1,9 @@
 const shoppingListRepository = require("../repositories/shoppingList.repository");
+const shoppingHistoryItemRepository = require("../repositories/shoppingHistoryItem.repository");
 const userRepository = require("../repositories/user.repository");
+const departmentRepository = require("../repositories/department.repository");
 const { BadRequestError, NotFoundError } = require("../errors/errors");
 const catchAsync = require("../utils/catch.async");
-const { path } = require("express/lib/application");
-const { model } = require("mongoose");
 
 exports.getAllShoppingLists = catchAsync(async (req, res, next) => {
   const shoppingLists = await shoppingListRepository.find();
@@ -45,6 +45,83 @@ exports.getShoppingList = catchAsync(async (req, res, next) => {
   res.status(200).json({ data: shoppingList });
 });
 
+exports.getOrderedShoppingList = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const shoppingList = await shoppingListRepository
+    .retrieve({ _id: id })
+    .populate({
+      path: "items.item",
+      model: "item",
+      populate: { path: "department", model: "department" }, // Populate department details for items
+    })
+    .populate({
+      path: "unrecognizedItems.item",
+      model: "unrecognized.item",
+    })
+    .populate({ path: "users", model: "user" })
+    .populate({ path: "admins", model: "user" })
+    .lean();
+
+  if (!shoppingList) {
+    return next(new NotFoundError(`Shopping list with id ${id} not found`));
+  }
+
+  // Organize items by department
+  const itemsByDepartment = {};
+
+  shoppingList.items.forEach(({ item, quantity }) => {
+    const departmentName = item.department?.name || "Uncategorized";
+    const departmentId = item.department?._id || "Uncategorized";
+    // console.log("departmentName", departmentName);
+    // console.log("departmentId", departmentId);
+    if (!itemsByDepartment[departmentId]) {
+      itemsByDepartment[departmentId] = {};
+      itemsByDepartment[departmentId]["name"] = departmentName;
+      itemsByDepartment[departmentId]["id"] = departmentId;
+      itemsByDepartment[departmentId]["items"] = [];
+    }
+    itemsByDepartment[departmentId].items.push({ item, quantity });
+  });
+
+  // console.log("itemsByDepartment", itemsByDepartment);
+
+  // Collect unrecognized items under a separate label
+  const unrecognizedItems = shoppingList.unrecognizedItems.map(({ item }) => ({
+    item,
+    quantity: 1,
+  }));
+
+  // Convert itemsByDepartment to an array for easier handling on the frontend
+  const orderedList = Object.entries(itemsByDepartment).map(
+    ([departmentId, { name, items }]) => ({
+      department: name,
+      items,
+      id: departmentId,
+    })
+  );
+
+  // Include unrecognized items as a separate department-like entry
+  orderedList.push({
+    department: {
+      heb: "לא מזוהים",
+      eng: "Unrecognized",
+    },
+    id: "unr555",
+    items: unrecognizedItems,
+  });
+
+  // itemsByDepartment["Unrecognized Items"] = {
+  //   id: "Unrecognized",
+  //   items: shoppingList.unrecognizedItems.map(({ item }) => item),
+  // };
+
+  shoppingList["items"] = null;
+
+  shoppingList["orededData"] = orderedList;
+
+  res.status(200).json({ data: shoppingList });
+});
+
 exports.createShoppingList = catchAsync(async (req, res, next) => {
   const { userId, name } = req.body;
   const new_list = await shoppingListRepository.create({ name });
@@ -59,6 +136,72 @@ exports.createShoppingList = catchAsync(async (req, res, next) => {
     return next(new BadRequestError("Invalid data"));
   }
   res.status(201).json(new_list);
+});
+
+exports.updateLiveShoppingList = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const { userId, departments, totalPrice } = req.body;
+  console.log("Got request to update live shopping list");
+  console.log("id", id);
+  console.log("userId", userId);
+  const shoppingList = await shoppingListRepository.retrieve(id);
+  if (!shoppingList) {
+    return next(new NotFoundError(`Shopping list with id ${id} not found`));
+  }
+  const user = await userRepository.retrieve({ _id: userId });
+  if (!user) {
+    return next(new NotFoundError(`User with id ${userId} not found`));
+  }
+
+  const unrecognizedDepartmentIndex = departments.findIndex(
+    (department) => department.id === "unr555"
+  );
+  let unrecognizedItems = [];
+  if (unrecognizedDepartmentIndex !== -1) {
+    unrecognizedItems = departments[unrecognizedDepartmentIndex].items.filter(
+      (item) => item.checked
+    );
+    departments.splice(unrecognizedDepartmentIndex, 1);
+  }
+
+  const checkedItems = departments.reduce((acc, department) => {
+    return acc.concat(department.items.filter((item) => item.checked));
+  }, []);
+
+  console.log("checkedItems", checkedItems);
+  console.log("unrecognizedItems", unrecognizedItems);
+  // Add checked items to shopping history
+  const shoppingHistoryItem = await shoppingHistoryItemRepository.create({
+    listId: id,
+    byUser: userId,
+    items: checkedItems,
+    totalPrice: totalPrice,
+    unrecognizedItems: unrecognizedItems,
+  });
+
+  // Update shopping list last buy date
+
+  shoppingList.lastBuy = new Date();
+
+  shoppingList.items = shoppingList.items.filter((item) => {
+    return !checkedItems.find(
+      (checkedItem) =>
+        checkedItem.item._id.toString() === item.item._id.toString()
+    );
+  });
+
+  shoppingList.unrecognizedItems = shoppingList.unrecognizedItems.filter(
+    (item) => {
+      return !unrecognizedItems.find(
+        (unrecognizedItem) =>
+          unrecognizedItem.item._id.toString() === item.item._id.toString()
+      );
+    }
+  );
+
+  await shoppingList.save();
+
+  res.status(200).json({ data: shoppingHistoryItem });
 });
 
 exports.updateShoppingList = catchAsync(async (req, res, next) => {
@@ -89,7 +232,6 @@ exports.deleteShoppingList = catchAsync(async (req, res, next) => {
 exports.addItemToShoppingList = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const item = req.body.item;
-  console.log(item);
   const shoppingList = await shoppingListRepository.retrieve({
     _id: id,
   });
@@ -100,10 +242,10 @@ exports.addItemToShoppingList = catchAsync(async (req, res, next) => {
     (m_item) => m_item.item.toString() === item.toString()
   );
   if (itemIndex !== -1) {
-    console.log("found");
+    // console.log("found");
     shoppingList.items[itemIndex].quantity += 1;
   } else {
-    console.log("not found");
+    // console.log("not found");
     shoppingList.items.push({ item, quantity: 1 });
   }
   await shoppingList.save();
@@ -121,7 +263,7 @@ exports.addItemToShoppingList = catchAsync(async (req, res, next) => {
   const resItem = newData.items.find(
     (m_item) => m_item.item._id.toString() === item.toString()
   );
-  console.log(resItem);
+  // console.log(resItem);
 
   res.status(200).json(resItem);
 });
@@ -130,11 +272,11 @@ exports.addUnrecognizedItemToShoppingList = catchAsync(
   async (req, res, next) => {
     const { id } = req.params;
     const item = req.body.item;
-    console.log("item", item);
+    // console.log("item", item);
     const shoppingList = await shoppingListRepository.retrieve({
       _id: id,
     });
-    console.log("shopping list", shoppingList);
+    // console.log("shopping list", shoppingList);
     if (!shoppingList) {
       return next(new NotFoundError(`Shopping list with id ${id} not found`));
     }
@@ -142,10 +284,10 @@ exports.addUnrecognizedItemToShoppingList = catchAsync(
       (m_item) => m_item.item.toString() === item.toString()
     );
     if (itemIndex !== -1) {
-      console.log("found");
+      // console.log("found");
       shoppingList.unrecognizedItems[itemIndex].quantity += 1;
     } else {
-      console.log("not found");
+      // console.log("not found");
       shoppingList.unrecognizedItems.push({ item, quantity: 1 });
     }
     await shoppingList.save();
@@ -160,11 +302,11 @@ exports.addUnrecognizedItemToShoppingList = catchAsync(
       })
       .lean();
 
-    console.log("item0:", newData.unrecognizedItems[0]);
+    // console.log("item0:", newData.unrecognizedItems[0]);
     const resItem = newData.unrecognizedItems.find(
       (m_item) => m_item.item._id.toString() === item.toString()
     );
-    console.log("resITem", resItem);
+    // console.log("resITem", resItem);
     res.status(200).json(resItem);
   }
 );
@@ -245,7 +387,7 @@ exports.removeUnrecognizedItemFromShoppingList = catchAsync(
     if (!resItem) {
       resItem = null;
     }
-    console.log("resItem", resItem);
+    // console.log("resItem", resItem);
     res.status(200).json(resItem);
   }
 );
