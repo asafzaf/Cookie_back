@@ -1,12 +1,3 @@
 {
-  "english": {
-    "name": "English",
-    "code": "en",
-    "flag": "us"
-  },
-  "hebrew": {
-    "name": "Hebrew",
-    "code": "heb",
-    "flag": "il"
-  }
+  "options": ["english", "hebrew", "russian"]
 }
