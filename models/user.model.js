@@ -13,6 +13,10 @@ const userSchema = new Schema({
     type: String,
     required: true,
   },
+  language: {
+    type: String,
+    default: "english",
+  },
   userId: {
     type: String,
     required: true,

@@ -10,6 +10,10 @@ module.exports = {
     return db.findOne(id);
   },
 
+  findByMail(mail) {
+    return db.findOne(mail);
+  },
+
   create(data) {
     return db.create(data);
   },

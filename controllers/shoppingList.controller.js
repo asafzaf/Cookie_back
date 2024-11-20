@@ -409,8 +409,10 @@ exports.setDefaultShoppingList = catchAsync(async (req, res, next) => {
 
 exports.addUserToShoppingList = catchAsync(async (req, res, next) => {
   const { userEmail, listId } = req.body;
-  const user = await userRepository.retrieve({ email: userEmail });
+  console.log("req.body", req.body);
+  const user = await userRepository.findByMail({ email: userEmail });
   if (!user) {
+    console.log(`User with email ${userEmail} not found`);
     return next(new NotFoundError(`User with email ${userEmail} not found`));
   }
   const list = await shoppingListRepository.retrieve({ _id: listId });
