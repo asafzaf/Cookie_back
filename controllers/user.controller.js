@@ -61,10 +61,8 @@ exports.changeLanguage = catchAsync(async (req, res, next) => {
       new BadRequestError("Language must be at least 2 characters long")
     );
   }
-  for (const lang of languages.options) {
-    if (lang === language) {
-      return next(new BadRequestError("Language not supported"));
-    }
+  if (!languages.options.includes(language)) {
+    return next(new BadRequestError("Invalid language option"));
   }
   const user = await userRepository.put(id, { language });
   if (!user) {
