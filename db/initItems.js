@@ -16,20 +16,29 @@ const itemsJson = require("./items.json");
 const departmentsJson = require("./departments.json");
 
 const Item = require("../models/item.model");
+const User = require("../models/user.model");
 const ShoppingList = require("../models/shoppingList.model");
 const Department = require("../models/department.model");
+
+async function initUsers() {
+  try {
+    await User.deleteMany({});
+    console.log("Users removed successfully");
+  } catch (error) {
+    console.error("Error removing users:", error);
+  }
+}
 
 async function initItems() {
   try {
     await Item.deleteMany({});
     const departments = await Department.find();
     itemsJson.items.forEach((item) => {
-      item.department = departments.find(
-        (department) => department.name.en === item.department
-      )?._id || null;
+      item.department =
+        departments.find((department) => department.name.en === item.department)
+          ?._id || null;
     });
     await Item.insertMany(itemsJson.items);
-    // await Item.insertMany(itemsJson.items);
     console.log("Items added successfully");
   } catch (error) {
     console.error("Error adding items:", error);
@@ -55,6 +64,7 @@ async function initDepartments() {
   }
 }
 let main = async () => {
+  await initUsers();
   await initDepartments();
   await initItems();
   await initShoppingList();

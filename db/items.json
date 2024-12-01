@@ -23,6 +23,55 @@
     },
     {
       "name": {
+        "en": "Grapes",
+        "heb": "ענבים"
+      },
+      "department": "Fruits"
+    },
+    {
+      "name": {
+        "en": "Pineapple",
+        "heb": "אננס"
+      },
+      "department": "Fruits"
+    },
+    {
+      "name": {
+        "en": "Strawberry",
+        "heb": "תות"
+      },
+      "department": "Fruits"
+    },
+    {
+      "name": {
+        "en": "Mango",
+        "heb": "מנגו"
+      },
+      "department": "Fruits"
+    },
+    {
+      "name": {
+        "en": "Watermelon",
+        "heb": "אבטיח"
+      },
+      "department": "Fruits"
+    },
+    {
+      "name": {
+        "en": "Pear",
+        "heb": "אגס"
+      },
+      "department": "Fruits"
+    },
+    {
+      "name": {
+        "en": "Papaya",
+        "heb": "פפאיה"
+      },
+      "department": "Fruits"
+    },
+    {
+      "name": {
         "en": "Carrot",
         "heb": "גזר"
       },
@@ -39,6 +88,55 @@
       "name": {
         "en": "Tomato",
         "heb": "עגבניה"
+      },
+      "department": "Vegetables"
+    },
+    {
+      "name": {
+        "en": "Cucumber",
+        "heb": "מלפפון"
+      },
+      "department": "Vegetables"
+    },
+    {
+      "name": {
+        "en": "Zucchini",
+        "heb": "קישוא"
+      },
+      "department": "Vegetables"
+    },
+    {
+      "name": {
+        "en": "Broccoli",
+        "heb": "ברוקולי"
+      },
+      "department": "Vegetables"
+    },
+    {
+      "name": {
+        "en": "Spinach",
+        "heb": "תרד"
+      },
+      "department": "Vegetables"
+    },
+    {
+      "name": {
+        "en": "Lettuce",
+        "heb": "חסה"
+      },
+      "department": "Vegetables"
+    },
+    {
+      "name": {
+        "en": "Avocado",
+        "heb": "אבוקדו"
+      },
+      "department": "Vegetables"
+    },
+    {
+      "name": {
+        "en": "Bell Pepper",
+        "heb": "פלפל"
       },
       "department": "Vegetables"
     },
@@ -65,6 +163,41 @@
     },
     {
       "name": {
+        "en": "Tuna",
+        "heb": "טונה"
+      },
+      "department": "Fish"
+    },
+    {
+      "name": {
+        "en": "Sardines",
+        "heb": "סרדינים"
+      },
+      "department": "Fish"
+    },
+    {
+      "name": {
+        "en": "Shrimp",
+        "heb": "שרימפס"
+      },
+      "department": "Fish"
+    },
+    {
+      "name": {
+        "en": "Cod",
+        "heb": "קוד"
+      },
+      "department": "Fish"
+    },
+    {
+      "name": {
+        "en": "Halibut",
+        "heb": "הליבוט"
+      },
+      "department": "Fish"
+    },
+    {
+      "name": {
         "en": "Milk",
         "heb": "חלב"
       },
@@ -86,6 +219,55 @@
     },
     {
       "name": {
+        "en": "Butter",
+        "heb": "חמאה"
+      },
+      "department": "Dairy"
+    },
+    {
+      "name": {
+        "en": "Cream",
+        "heb": "שמנת"
+      },
+      "department": "Dairy"
+    },
+    {
+      "name": {
+        "en": "Cottage Cheese",
+        "heb": "גבינת קוטג'"
+      },
+      "department": "Dairy"
+    },
+    {
+      "name": {
+        "en": "Sour Cream",
+        "heb": "שמנת חמוצה"
+      },
+      "department": "Dairy"
+    },
+    {
+      "name": {
+        "en": "Ricotta",
+        "heb": "ריקוטה"
+      },
+      "department": "Dairy"
+    },
+    {
+      "name": {
+        "en": "Mozzarella",
+        "heb": "מוצרלה"
+      },
+      "department": "Dairy"
+    },
+    {
+      "name": {
+        "en": "Yogurt Drink",
+        "heb": "שתיית יוגורט"
+      },
+      "department": "Dairy"
+    },
+    {
+      "name": {
         "en": "Bread",
         "heb": "לחם"
       },
@@ -100,45 +282,45 @@
     },
     {
       "name": {
-        "en": "Eggs",
-        "heb": "ביצים"
+        "en": "Baguette",
+        "heb": "באגט"
       },
-      "department": "Dairy"
+      "department": "Bakery"
     },
     {
       "name": {
-        "en": "Rice",
-        "heb": "אורז"
+        "en": "Bagel",
+        "heb": "בייגל"
       },
-      "department": "Grains"
+      "department": "Bakery"
     },
     {
       "name": {
-        "en": "Pasta",
-        "heb": "פסטה"
+        "en": "Muffin",
+        "heb": "מאפין"
       },
-      "department": "Grains"
+      "department": "Bakery"
     },
     {
       "name": {
-        "en": "Butter",
-        "heb": "חמאה"
+        "en": "Donut",
+        "heb": "דונאט"
       },
-      "department": "Dairy"
+      "department": "Bakery"
     },
     {
       "name": {
-        "en": "Onion",
-        "heb": "בצל"
+        "en": "Focaccia",
+        "heb": "פוקצ'יה"
       },
-      "department": "Vegetables"
+      "department": "Bakery"
     },
     {
       "name": {
-        "en": "Garlic",
-        "heb": "שום"
+        "en": "English Muffin",
+        "heb": "מאפין אנגלי"
       },
-      "department": "Vegetables"
+      "department": "Bakery"
     },
     {
       "name": {
@@ -149,129 +331,52 @@
     },
     {
       "name": {
-        "en": "Black Pepper",
-        "heb": "פלפל שחור"
+        "en": "Frozen Fries",
+        "heb": "צ'יפס קפוא"
       },
-      "department": "Spices"
+      "department": "Frozen"
     },
     {
       "name": {
-        "en": "Coke",
-        "heb": "קולה"
+        "en": "Frozen Vegetables",
+        "heb": "ירקות קפואים"
       },
-      "department": "Drinks"
+      "department": "Frozen"
     },
     {
       "name": {
-        "en": "Canned Corn",
-        "heb": "תירס משומר"
+        "en": "Ice Cream",
+        "heb": "גלידה"
       },
-      "department": "Canned"
+      "department": "Frozen"
     },
     {
       "name": {
-        "en": "Chocolate Bar",
-        "heb": "חטיף שוקולד"
+        "en": "Frozen Meat",
+        "heb": "בשר קפוא"
       },
-      "department": "Sweets"
+      "department": "Frozen"
     },
     {
       "name": {
-        "en": "Potato Chips",
-        "heb": "צ'יפס"
+        "en": "Frozen Fish",
+        "heb": "דגים קפואים"
       },
-      "department": "Snacks"
+      "department": "Frozen"
     },
     {
       "name": {
-        "en": "Dish Soap",
-        "heb": "סבון כלים"
+        "en": "Frozen Berries",
+        "heb": "פירות יער קפואים"
       },
-      "department": "Cleaning"
+      "department": "Frozen"
     },
     {
       "name": {
-        "en": "Shampoo",
-        "heb": "שמפו"
+        "en": "Frozen Pizza Roll",
+        "heb": "פיצה רול קפואה"
       },
-      "department": "Personal Care"
-    },
-    {
-      "name": {
-        "en": "Baby Wipes",
-        "heb": "מגבונים לתינוק"
-      },
-      "department": "Baby"
-    },
-    {
-      "name": {
-        "en": "Dog Food",
-        "heb": "אוכל לכלבים"
-      },
-      "department": "Pets"
-    },
-    {
-      "name": {
-        "en": "Toilet Paper",
-        "heb": "נייר טואלט"
-      },
-      "department": "Home"
-    },
-    {
-      "name": {
-        "en": "Smartphone",
-        "heb": "טלפון חכם"
-      },
-      "department": "Electronics"
-    },
-    {
-      "name": {
-        "en": "Notebook",
-        "heb": "מחברת"
-      },
-      "department": "Stationery"
-    },
-    {
-      "name": {
-        "en": "T-Shirt",
-        "heb": "חולצה"
-      },
-      "department": "Clothing"
-    },
-    {
-      "name": {
-        "en": "Pain Reliever",
-        "heb": "משכך כאבים"
-      },
-      "department": "Farmacy"
-    },
-    {
-      "name": {
-        "en": "Vitamin C",
-        "heb": "ויטמין C"
-      },
-      "department": "Supplements"
-    },
-    {
-      "name": {
-        "en": "Tofu",
-        "heb": "טופו"
-      },
-      "department": "Meat substitutes"
-    },
-    {
-      "name": {
-        "en": "Garden Shovel",
-        "heb": "את חפירה"
-      },
-      "department": "Garden"
-    },
-    {
-      "name": {
-        "en": "Hammer",
-        "heb": "פטיש"
-      },
-      "department": "Tools"
+      "department": "Frozen"
     }
   ]
 }
