@@ -1,7 +1,7 @@
 const shoppingListRepository = require("../repositories/shoppingList.repository");
 const shoppingHistoryItemRepository = require("../repositories/shoppingHistoryItem.repository");
 const userRepository = require("../repositories/user.repository");
-const departmentRepository = require("../repositories/department.repository");
+const messageRepository = require("../repositories/message.repository");
 const { BadRequestError, NotFoundError } = require("../errors/errors");
 const catchAsync = require("../utils/catch.async");
 
@@ -38,6 +38,10 @@ exports.getShoppingList = catchAsync(async (req, res, next) => {
       path: "admins",
       model: "user",
     })
+    .populate({
+      path: "pendingUsers",
+      model: "user",
+    })
     .lean();
   if (!shoppingList) {
     return next(new NotFoundError(`Shopping list with id ${id} not found`));
@@ -60,6 +64,7 @@ exports.getOrderedShoppingList = catchAsync(async (req, res, next) => {
     })
     .populate({ path: "users", model: "user" })
     .populate({ path: "admins", model: "user" })
+    .populate({ path: "pendingUsers", model: "user" })
     .lean();
 
   if (!shoppingList) {
@@ -408,7 +413,7 @@ exports.setDefaultShoppingList = catchAsync(async (req, res, next) => {
 });
 
 exports.addUserToShoppingList = catchAsync(async (req, res, next) => {
-  const { userEmail, listId } = req.body;
+  const { selfId, userEmail, listId } = req.body;
   console.log("req.body", req.body);
   const user = await userRepository.findByMail({ email: userEmail });
   if (!user) {
@@ -419,11 +424,72 @@ exports.addUserToShoppingList = catchAsync(async (req, res, next) => {
   if (!list) {
     return next(new NotFoundError(`Shopping list with id ${listId} not found`));
   }
-  list.users.push(user._id);
+  list.pendingUsers.push(user._id);
+  user.pendingShoppingLists.push(listId);
+  const message = await messageRepository.create({
+    userId: user._id,
+    sender: selfId,
+    recipient: user._id,
+    title: "Shopping list invitation",
+    message: `You have been invited to join the shopping list ${list.name}`,
+    type: "invitation",
+    attachments: [`listId: ${listId}`],
+  });
   await list.save();
+  await user.save();
+  res.status(200).json(user);
+});
+
+exports.acceptUserToShoppingList = catchAsync(async (req, res, next) => {
+  const { userId, listId } = req.body;
+  const user = await userRepository.retrieve({ _id: userId });
+  if (!user) {
+    return next(new NotFoundError(`User with id ${userId} not found`));
+  }
+  const list = await shoppingListRepository.retrieve({ _id: listId });
+  if (!list) {
+    return next(new NotFoundError(`Shopping list with id ${listId} not found`));
+  }
+  const searchIndex = list.users.indexOf(userId);
+  if (searchIndex !== -1) {
+    return next(new BadRequestError("User already in list"));
+  }
+  const userIndex = list.pendingUsers.indexOf(userId);
+  if (userIndex !== -1) {
+    list.pendingUsers.splice(userIndex, 1);
+  }
+  list.users.push(userId);
+  await list.save();
+  const listIndex = user.pendingShoppingLists.indexOf(listId);
+  if (listIndex !== -1) {
+    user.pendingShoppingLists.splice(listIndex, 1);
+  }
   user.shoppingLists.push(listId);
   await user.save();
   res.status(200).json(list);
+});
+
+exports.rejectUserToShoppingList = catchAsync(async (req, res, next) => {
+  const { userId, listId } = req.body;
+  const user = await userRepository.retrieve({ _id: userId });
+  if (!user) {
+    return next(new NotFoundError(`User with id ${userId} not found`));
+  }
+  const list = await shoppingListRepository.retrieve({ _id: listId });
+  if (!list) {
+    return next(new NotFoundError(`Shopping list with id ${listId} not found`));
+  }
+  const userIndex = list.pendingUsers.indexOf(userId);
+  if (userIndex !== -1) {
+    list.pendingUsers.splice(userIndex, 1);
+  }
+  await list.save();
+  const listIndex = user.pendingShoppingLists.indexOf(listId);
+  if (listIndex !== -1) {
+    user.pendingShoppingLists.splice(listIndex, 1);
+  }
+  await user.save();
+  res.status(200);
 });
 
 exports.removeUserFromShoppingList = catchAsync(async (req, res, next) => {
