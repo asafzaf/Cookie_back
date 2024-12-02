@@ -35,7 +35,6 @@ module.exports = class MongoDB extends EventEmitter {
   }
 
   findByUserId(id) {
-    console.log(id);
     return this.Model.find({ userId: id });
   }
 
