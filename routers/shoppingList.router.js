@@ -22,6 +22,8 @@ router.put("/:id/live", shoppingListController.updateLiveShoppingList);
 router.delete("/:id", shoppingListController.deleteShoppingList);
 router.post("/setDefault", shoppingListController.setDefaultShoppingList);
 router.post("/addUser", shoppingListController.addUserToShoppingList);
+router.post("/acceptUser", shoppingListController.acceptUserToShoppingList);
+router.post("/rejectUser", shoppingListController.rejectUserToShoppingList);
 router.post("/removeUser", shoppingListController.removeUserFromShoppingList);
 router.post("/addAdmin", shoppingListController.addAdminToShoppingList);
 router.post("/removeAdmin", shoppingListController.removeAdminFromShoppingList);

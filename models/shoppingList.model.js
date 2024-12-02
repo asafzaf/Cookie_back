@@ -17,6 +17,12 @@ const shoppingListSchema = new Schema({
       ref: "user",
     },
   ],
+  pendingUsers: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "user",
+    },
+  ],
   items: [
     {
       item: {

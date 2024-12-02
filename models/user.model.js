@@ -27,6 +27,12 @@ const userSchema = new Schema({
       ref: "shopping.list",
     },
   ],
+  pendingShoppingLists: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "shopping.list",
+    },
+  ],
   recipes: [
     {
       type: Schema.Types.ObjectId,
@@ -37,6 +43,12 @@ const userSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "shopping.list",
   },
+  messages: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "message",
+    },
+  ],
   dateCreated: {
     type: Date,
     default: Date.now,
