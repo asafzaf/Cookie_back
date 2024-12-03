@@ -98,7 +98,7 @@ exports.getOrderedShoppingList = catchAsync(async (req, res, next) => {
     quantity: 1,
   }));
 
-  console.log("unrecognizedItems", unrecognizedItems);
+  // console.log("unrecognizedItems", unrecognizedItems);
 
   // Convert itemsByDepartment to an array for easier handling on the frontend
   const orderedList = Object.entries(itemsByDepartment).map(
