@@ -1,5 +1,6 @@
 const shoppingListRepository = require("../repositories/shoppingList.repository");
 const shoppingHistoryItemRepository = require("../repositories/shoppingHistoryItem.repository");
+const departmentRepository = require("../repositories/department.repository");
 const userRepository = require("../repositories/user.repository");
 const messageRepository = require("../repositories/message.repository");
 const { BadRequestError, NotFoundError } = require("../errors/errors");
@@ -50,6 +51,7 @@ exports.getShoppingList = catchAsync(async (req, res, next) => {
 });
 
 exports.getOrderedShoppingList = catchAsync(async (req, res, next) => {
+  console.log("Got request to get ordered shopping list");
   const { id } = req.params;
   const shoppingList = await shoppingListRepository
     .retrieve({ _id: id })
@@ -66,7 +68,7 @@ exports.getOrderedShoppingList = catchAsync(async (req, res, next) => {
     .populate({ path: "admins", model: "user" })
     .populate({ path: "pendingUsers", model: "user" })
     .lean();
-
+  // console.log("shoppingList", shoppingList);
   if (!shoppingList) {
     return next(new NotFoundError(`Shopping list with id ${id} not found`));
   }
@@ -96,6 +98,8 @@ exports.getOrderedShoppingList = catchAsync(async (req, res, next) => {
     quantity: 1,
   }));
 
+  console.log("unrecognizedItems", unrecognizedItems);
+
   // Convert itemsByDepartment to an array for easier handling on the frontend
   const orderedList = Object.entries(itemsByDepartment).map(
     ([departmentId, { name, items }]) => ({
@@ -109,7 +113,7 @@ exports.getOrderedShoppingList = catchAsync(async (req, res, next) => {
   orderedList.push({
     department: {
       heb: "לא מזוהים",
-      eng: "Unrecognized",
+      en: "Unrecognized",
     },
     id: "unr555",
     items: unrecognizedItems,
