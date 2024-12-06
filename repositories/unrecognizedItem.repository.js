@@ -7,7 +7,7 @@ module.exports = {
   },
 
   retrieve(id) {
-    return db.findOne(id);
+    return db.findById(id);
   },
 
   create(data) {
