@@ -17,10 +17,12 @@ const unrecognizedItemSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "user",
   },
-  createOnList: {
-    type: Schema.Types.ObjectId,
-    ref: "shopping.list",
-  },
+  createOnList: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "shopping.list",
+    },
+  ],
   addedToItems: {
     type: Boolean,
     default: false,
