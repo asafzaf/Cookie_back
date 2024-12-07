@@ -9,4 +9,6 @@ router.post('/', unrecognizedItemController.createUnrecognizedItem);
 router.put('/:id', unrecognizedItemController.updateUnrecognizedItem);
 router.delete('/:id', unrecognizedItemController.deleteUnrecognizedItem);
 
+router.post('/:id/recognize', unrecognizedItemController.recognizeItem);
+
 module.exports = router;
