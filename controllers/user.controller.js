@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const userRepository = require("../repositories/user.repository");
 const { BadRequestError, NotFoundError } = require("../errors/errors");
 const catchAsync = require("../utils/catch.async");
@@ -69,4 +70,16 @@ exports.changeLanguage = catchAsync(async (req, res, next) => {
     return next(new NotFoundError(`User with id ${id} not found`));
   }
   res.status(200).json(user);
+});
+
+exports.token = catchAsync(async (req, res, next) => {
+  const { id } = req.params;
+  const user = await userRepository.retrieve({ userId: id });
+  if (!user) {
+    return next(new NotFoundError(`User with id ${id} not found`));
+  }
+  const token = jwt.sign({ id: user.userId }, process.env.JWT_SECRET, {
+    expiresIn: process.env.JWT_EXPIRES_IN,
+  });
+  res.status(200).json({ token });
 });

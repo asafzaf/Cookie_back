@@ -10,4 +10,6 @@ router.put('/:id', userController.updateUser);
 router.delete('/:id', userController.deleteUser);
 router.put('/:id/language', userController.changeLanguage);
 
+router.get('/:id/token', userController.token);
+
 module.exports = router;
