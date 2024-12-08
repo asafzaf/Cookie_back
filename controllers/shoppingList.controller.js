@@ -535,7 +535,7 @@ exports.addAdminToShoppingList = catchAsync(async (req, res, next) => {
   }
   list.admins.push(userId);
   await list.save();
-  res.status(200).json(list);
+  res.status(200).json(list.admins);
 });
 
 exports.removeAdminFromShoppingList = catchAsync(async (req, res, next) => {
@@ -553,5 +553,5 @@ exports.removeAdminFromShoppingList = catchAsync(async (req, res, next) => {
     list.admins.splice(userIndex, 1);
   }
   await list.save();
-  res.status(200).json(list);
+  res.status(200).json(list.admins);
 });
