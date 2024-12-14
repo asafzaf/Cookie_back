@@ -41,7 +41,6 @@ exports.login = catchAsync(async (req, res, next) => {
   if (!user) {
     return next(new NotFoundError("User not found"));
   }
-  console.log(user);
   if (user.email !== email) {
     return next(new BadRequestError("Email and uid do not match"));
   }
@@ -50,7 +49,6 @@ exports.login = catchAsync(async (req, res, next) => {
 });
 
 exports.signup = catchAsync(async (req, res, next) => {
-  console.log(req.body);
   if (!req.body.email || !req.body.userId) {
     return next(new BadRequestError("Email and uid are required"));
   } else if (!req.body.first_name || !req.body.last_name) {
