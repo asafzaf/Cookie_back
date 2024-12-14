@@ -1,3 +1,4 @@
+const jwt = require("jsonwebtoken");
 const userRepository = require("../repositories/user.repository");
 const { BadRequestError, NotFoundError } = require("../errors/errors");
 const catchAsync = require("../utils/catch.async");
@@ -16,7 +17,6 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 
 exports.getUser = catchAsync(async (req, res, next) => {
   const { id } = req.params;
-  console.log(id);
   const user = await userRepository.retrieve({ userId: id });
   if (!user) {
     return next(new NotFoundError(`User with id ${id} not found`));

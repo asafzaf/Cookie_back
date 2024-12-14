@@ -51,7 +51,6 @@ exports.getShoppingList = catchAsync(async (req, res, next) => {
 });
 
 exports.getOrderedShoppingList = catchAsync(async (req, res, next) => {
-  console.log("Got request to get ordered shopping list");
   const { id } = req.params;
   const shoppingList = await shoppingListRepository
     .retrieve({ _id: id })
@@ -150,9 +149,6 @@ exports.createShoppingList = catchAsync(async (req, res, next) => {
 exports.updateLiveShoppingList = catchAsync(async (req, res, next) => {
   const { id } = req.params;
   const { userId, departments, totalPrice } = req.body;
-  console.log("Got request to update live shopping list");
-  console.log("id", id);
-  console.log("userId", userId);
   const shoppingList = await shoppingListRepository.retrieve(id);
   if (!shoppingList) {
     return next(new NotFoundError(`Shopping list with id ${id} not found`));
@@ -177,8 +173,6 @@ exports.updateLiveShoppingList = catchAsync(async (req, res, next) => {
     return acc.concat(department.items.filter((item) => item.checked));
   }, []);
 
-  console.log("checkedItems", checkedItems);
-  console.log("unrecognizedItems", unrecognizedItems);
   // Add checked items to shopping history
   const shoppingHistoryItem = await shoppingHistoryItemRepository.create({
     listId: id,
@@ -418,7 +412,6 @@ exports.setDefaultShoppingList = catchAsync(async (req, res, next) => {
 
 exports.addUserToShoppingList = catchAsync(async (req, res, next) => {
   const { selfId, userEmail, listId } = req.body;
-  console.log("req.body", req.body);
   const user = await userRepository.findByMail({ email: userEmail });
   if (!user) {
     console.log(`User with email ${userEmail} not found`);

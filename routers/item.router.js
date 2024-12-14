@@ -1,11 +1,12 @@
 const express = require("express");
+const authController = require("../controllers/auth.controller");
 const itemController = require("../controllers/item.controller");
 const router = express.Router();
 
-router.get("/", itemController.getAllItems);
-router.get("/:id", itemController.getItem);
-router.post("/", itemController.createItem);
-router.put("/:id", itemController.updateItem);
-router.delete("/:id", itemController.deleteItem);
+router.get("/", authController.protect, itemController.getAllItems);
+router.get("/:id", authController.protect, itemController.getItem);
+router.post("/", authController.protect, itemController.createItem);
+router.put("/:id", authController.protect, itemController.updateItem);
+router.delete("/:id", authController.protect, itemController.deleteItem);
 
 module.exports = router;

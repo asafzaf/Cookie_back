@@ -1,31 +1,98 @@
 const express = require("express");
+const authController = require("../controllers/auth.controller");
 const shoppingListController = require("../controllers/shoppingList.controller");
 
 const router = express.Router();
 
-router.get("/", shoppingListController.getAllShoppingLists);
-router.get("/:id", shoppingListController.getShoppingList);
-router.get("/:id/ordered", shoppingListController.getOrderedShoppingList);
-router.post("/", shoppingListController.createShoppingList);
-router.post("/:id/add", shoppingListController.addItemToShoppingList);
+router.get(
+  "/",
+  authController.protect,
+  shoppingListController.getAllShoppingLists
+);
+router.get(
+  "/:id",
+  authController.protect,
+  shoppingListController.getShoppingList
+);
+router.get(
+  "/:id/ordered",
+  authController.protect,
+  shoppingListController.getOrderedShoppingList
+);
+router.post(
+  "/",
+  authController.protect,
+  shoppingListController.createShoppingList
+);
+router.post(
+  "/:id/add",
+  authController.protect,
+  shoppingListController.addItemToShoppingList
+);
 router.post(
   "/:id/addUnrecognized",
+  authController.protect,
   shoppingListController.addUnrecognizedItemToShoppingList
 );
-router.post("/:id/remove", shoppingListController.removeItemFromShoppingList);
+router.post(
+  "/:id/remove",
+  authController.protect,
+  shoppingListController.removeItemFromShoppingList
+);
 router.post(
   "/:id/removeUnrecognized",
+  authController.protect,
   shoppingListController.removeUnrecognizedItemFromShoppingList
 );
-router.put("/:id", shoppingListController.updateShoppingList);
-router.put("/:id/live", shoppingListController.updateLiveShoppingList);
-router.delete("/:id", shoppingListController.deleteShoppingList);
-router.post("/setDefault", shoppingListController.setDefaultShoppingList);
-router.post("/addUser", shoppingListController.addUserToShoppingList);
-router.post("/acceptUser", shoppingListController.acceptUserToShoppingList);
-router.post("/rejectUser", shoppingListController.rejectUserToShoppingList);
-router.post("/removeUser", shoppingListController.removeUserFromShoppingList);
-router.post("/addAdmin", shoppingListController.addAdminToShoppingList);
-router.post("/removeAdmin", shoppingListController.removeAdminFromShoppingList);
+router.put(
+  "/:id",
+  authController.protect,
+  shoppingListController.updateShoppingList
+);
+router.put(
+  "/:id/live",
+  authController.protect,
+  shoppingListController.updateLiveShoppingList
+);
+router.delete(
+  "/:id",
+  authController.protect,
+  shoppingListController.deleteShoppingList
+);
+router.post(
+  "/setDefault",
+  authController.protect,
+  shoppingListController.setDefaultShoppingList
+);
+router.post(
+  "/addUser",
+  authController.protect,
+  shoppingListController.addUserToShoppingList
+);
+router.post(
+  "/acceptUser",
+  authController.protect,
+  shoppingListController.acceptUserToShoppingList
+);
+router.post(
+  "/rejectUser",
+  authController.protect,
+  shoppingListController.rejectUserToShoppingList
+);
+router.post(
+  "/removeUser",
+  authController.protect,
+  shoppingListController.removeUserFromShoppingList
+);
+router.post(
+  "/addAdmin",
+  authController.protect,
+  shoppingListController.addAdminToShoppingList
+);
+router.post(
+  "/removeAdmin",
+  authController.protect,
+  shoppingListController.removeAdminFromShoppingList
+);
 
 module.exports = router;
