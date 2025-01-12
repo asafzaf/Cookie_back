@@ -1,23 +1,16 @@
-const fs = require("fs");
 const express = require("express");
 const globalErrorHandler = require("../controllers/error.controller");
 const mainRouter = require("../routers/main.router");
 const logger = require("morgan");
 const { NotFoundError } = require("../errors/errors");
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 80;
 const cors = require("cors");
-const https = require("https");
-
-const options = {
-  key: fs.readFileSync("server.key"),
-  cert: fs.readFileSync("server.cert"),
-};
 
 app.use(cors({
     origin: "*",
     methods: "GET,POST,PUT,DELETE",
-    // allowedHeaders: "Content-Type,Authorization",
+    allowedHeaders: "Content-Type,Authorization",
 }));
 
 app.use(express.json());
@@ -33,16 +26,10 @@ app.all("*", (req, res, next) => {
 
 app.use(globalErrorHandler);
 
-const httpsServer = https.createServer(options, app);
-
-const serv = httpsServer.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+const serv = app.listen(port, () => {
+  process.env.NODE_ENV === "test"
+    console.log(`Server is running on port ${port}`);
 });
-
-// const serv = app.listen(port, () => {
-//   process.env.NODE_ENV === "test"
-//     console.log(`Server is running on port ${port}`);
-// });
 
 process.on("unhandledRejection", (err) => {
   console.log(err.name, err.message);
