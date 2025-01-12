@@ -57,6 +57,14 @@ const userSchema = new Schema({
     type: Date,
     default: Date.now,
   },
+  isAdmin: {
+    type: Boolean,
+    default: false,
+  },
+  password: {
+    type: String,
+    required: false,
+  },
 });
 
 module.exports = model("user", userSchema);

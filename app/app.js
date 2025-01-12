@@ -4,13 +4,13 @@ const mainRouter = require("../routers/main.router");
 const logger = require("morgan");
 const { NotFoundError } = require("../errors/errors");
 const app = express();
-const port = process.env.PORT || 3000;
+const port = process.env.PORT || 80;
 const cors = require("cors");
 
 app.use(cors({
     origin: "*",
     methods: "GET,POST,PUT,DELETE",
-    // allowedHeaders: "Content-Type,Authorization",
+    allowedHeaders: "Content-Type,Authorization",
 }));
 
 app.use(express.json());

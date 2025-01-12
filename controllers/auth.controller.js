@@ -25,7 +25,7 @@ exports.protect = catchAsync(async (req, res, next) => {
     }
     const user = await userRepository.retrieve({ userId: decoded.id });
     if (!user) {
-      return next(new NotFoundError("User not found"));
+      return next(new BadRequestError("Invalid token"));
     }
     req.user = user;
     next();
@@ -33,32 +33,69 @@ exports.protect = catchAsync(async (req, res, next) => {
 });
 
 exports.login = catchAsync(async (req, res, next) => {
-  const { email, uid } = req.body;
-  if (!email || !uid) {
-    return next(new BadRequestError("Email and uid are required"));
+  try {
+    const { email, uid } = req.body;
+    if (!email || !uid) {
+      return next(new BadRequestError("Email and uid are required"));
+    }
+    const user = await userRepository.retrieve({ userId: uid });
+    if (!user) {
+      return next(new NotFoundError("User not found"));
+    }
+    if (user.email !== email) {
+      return next(new BadRequestError("Email and uid do not match"));
+    }
+    const token = generate_token(user.userId);
+    res.status(200).json({ data: user, token });
+  } catch (error) {
+    console.log(error);
   }
-  const user = await userRepository.retrieve({ userId: uid });
-  if (!user) {
-    return next(new NotFoundError("User not found"));
+});
+
+exports.Alogin = catchAsync(async (req, res, next) => {
+  try {
+    const { email, password } = req.body;
+    console.log(req.body);
+    if (!email || !password) {
+      return next(new BadRequestError("Email and password are required"));
+    }
+    const user = await userRepository.retrieve({ email: email });
+    if (!user) {
+      return next(new NotFoundError("User not found"));
+    }
+    if (user.isAdmin === false) {
+      return next(new BadRequestError("User is not an admin"));
+    }
+    console.log("user", user);
+    console.log("user email", user.email);
+    console.log("isAdmin", user.isAdmin);
+    console.log("user password", user.password);
+    console.log(password);
+    if (user.password !== password) {
+      return next(new BadRequestError("Password is incorrect"));
+    }
+    const token = generate_token(user.userId);
+    res.status(200).json({ data: user, token });
+  } catch (error) {
+    console.log(error);
   }
-  if (user.email !== email) {
-    return next(new BadRequestError("Email and uid do not match"));
-  }
-  const token = generate_token(user.userId);
-  res.status(200).json({ data: user, token });
 });
 
 exports.signup = catchAsync(async (req, res, next) => {
-  if (!req.body.email || !req.body.userId) {
-    return next(new BadRequestError("Email and uid are required"));
-  } else if (!req.body.first_name || !req.body.last_name) {
-    return next(new BadRequestError("First name and last name are required"));
-  } else if (await userRepository.retrieve({ userId: req.body.userId })) {
-    return next(new BadRequestError("User already exists"));
-  } else if (await userRepository.retrieve({ email: req.body.email })) {
-    return next(new BadRequestError("Email already exists"));
+  try {
+    if (!req.body.email || !req.body.userId) {
+      return next(new BadRequestError("Email and uid are required"));
+    } else if (!req.body.first_name || !req.body.last_name) {
+      return next(new BadRequestError("First name and last name are required"));
+    } else if (await userRepository.retrieve({ userId: req.body.userId })) {
+      return next(new BadRequestError("User already exists"));
+    } else if (await userRepository.retrieve({ email: req.body.email })) {
+      return next(new BadRequestError("Email already exists"));
+    }
+    const user = await userRepository.create(req.body);
+    const token = generate_token(user.userId);
+    res.status(201).json({ data: user, token });
+  } catch (error) {
+    console.log(error);
   }
-  const user = await userRepository.create(req.body);
-  const token = generate_token(user.userId);
-  res.status(201).json({ data: user, token });
 });
