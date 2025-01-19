@@ -507,10 +507,18 @@ exports.removeUserFromShoppingList = catchAsync(async (req, res, next) => {
   if (adminIndex !== -1) {
     list.admins.splice(adminIndex, 1);
   }
+  const pendingUserIndex = list.pendingUsers.indexOf(userId);
+  if (pendingUserIndex !== -1) {
+    list.pendingUsers.splice(pendingUserIndex, 1);
+  }
   await list.save();
   const listIndex = user.shoppingLists.indexOf(listId);
   if (listIndex !== -1) {
     user.shoppingLists.splice(listIndex, 1);
+  }
+  const pendingIndex = user.pendingShoppingLists.indexOf(listId);
+  if (pendingIndex !== -1) {
+    user.pendingShoppingLists.splice(pendingIndex, 1);
   }
   await user.save();
   res.status(200).json(list);
